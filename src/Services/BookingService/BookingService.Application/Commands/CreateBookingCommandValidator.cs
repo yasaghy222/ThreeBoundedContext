@@ -17,6 +17,6 @@ public class CreateBookingCommandValidator : AbstractValidator<CreateBookingComm
 		    .GreaterThan(0).WithMessage("Amount must be greater than zero");
 
 		RuleFor(x => x.BookingDate)
-		    .GreaterThan(DateTime.UtcNow.Date).WithMessage("Booking date must be in the future");
+		    .GreaterThan(DateTime.Now.Date).WithMessage("Booking date must be in the future");
 	}
 }
