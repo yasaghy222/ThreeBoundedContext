@@ -1,3 +1,4 @@
+using ErrorHandling;
 using Logging;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -20,6 +21,7 @@ builder.AddLoggingExtension("BookingService");
 // Add services
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddErrorHandling();
 
 // Controllers
 builder.Services.AddControllers();
@@ -63,6 +65,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerExtension(app.Environment);
 }
 
+app.UseErrorHandling();
 app.UseLoggingExtension();
 
 app.UseRouting();

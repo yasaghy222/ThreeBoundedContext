@@ -18,6 +18,7 @@
     <ProjectReference Include="..\BookingService.Infrastructure\BookingService.Infrastructure.csproj" />
     <ProjectReference Include="..\..\..\Shared\Shared.Swagger\Shared.Swagger.csproj" />
     <ProjectReference Include="..\..\..\Shared\Shared.Logging\Logging.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Shared.ErrorHandling\ErrorHandling.csproj" />
   </ItemGroup>
 
 </Project>

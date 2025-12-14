@@ -73,6 +73,6 @@ appsettings.*.json
 !appsettings.json
 !appsettings.Development.json
 
-Deploy/SQL/data/*.mdf
-Deploy/SQL/data/*.ldf
-Deploy/SQL/data/*.bak
+# Deploy component data directories
+Deploy/*/data/
+src/Deploy/*/data/

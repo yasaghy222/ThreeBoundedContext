@@ -1,3 +1,4 @@
+using ErrorHandling;
 using FluentValidation;
 using Logging;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,7 @@ builder.AddLoggingExtension("UserService");
 // Add services
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddErrorHandling();
 
 // gRPC
 builder.Services.AddGrpc();
@@ -68,6 +70,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerExtension(app.Environment);
 }
 
+app.UseErrorHandling();
 app.UseLoggingExtension();
 
 app.UseRouting();
