@@ -19,11 +19,11 @@ message GetUserByEmailRequest {
 }
 
 message UserResponse {
-  bool found = 1;
-  string user_id = 2;
-  string email = 3;
+  bool   found     = 1;
+  string user_id   = 2;
+  string email     = 3;
   string full_name = 4;
-  bool is_active = 5;
+  bool   is_active = 5;
 }
 
 message ValidateUserRequest {
@@ -31,7 +31,7 @@ message ValidateUserRequest {
 }
 
 message ValidateUserResponse {
-  bool is_valid = 1;
-  bool is_active = 2;
-  string message = 3;
+  bool   is_valid  = 1;
+  bool   is_active = 2;
+  string message   = 3;
 }

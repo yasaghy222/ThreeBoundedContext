@@ -1,0 +1,34 @@
+services:
+  user-service:
+    container_name: user-service
+    build:
+      context: ../../..
+      dockerfile: src/Services/UserService/Dockerfile
+    env_file:
+      - ../../Deploy/RabbitMQ/.env
+      - ../../Deploy/SQL/.env
+      - ../../Deploy/Seq/.env
+      - ./UserService.API/.env
+    ports:
+      - "5001:5001"
+      - "5002:5002"
+    volumes:
+      - type: bind
+        source: ./UserService.API/appsettings.json
+        target: /app/appsettings.json
+      - type: bind
+        source: ./UserService.API/.env
+        target: /app/.env   
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      seq:
+        condition: service_started
+    networks:
+      - microservices-network
+
+networks:
+  microservices-network:
+    external: true

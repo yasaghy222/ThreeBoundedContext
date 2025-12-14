@@ -1,40 +1,53 @@
+using ErrorHandling;
+using Logging;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using Shared.Swagger;
 using FinanceService.Application;
 using FinanceService.Infrastructure;
 using FinanceService.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Serilog
-Log.Logger = new LoggerConfiguration()
-    .ReadFrom.Configuration(builder.Configuration)
-    .Enrich.FromLogContext()
-    .WriteTo.Console()
-    .CreateLogger();
+// Configure to read from environment variables first, then appsettings
+builder.Configuration
+    .AddEnvironmentVariables()
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true);
 
-builder.Host.UseSerilog();
+// Logging with Serilog + Seq
+builder.AddLoggingExtension("FinanceService");
 
 // Add services
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddErrorHandling();
 
 // Controllers
 builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new() { Title = "Finance Service API", Version = "v1" });
-});
+builder.Services.AddSwaggerExtension(builder.Configuration, builder.Environment);
 
 // Health Checks
+var sqlHost = builder.Configuration["SQLSERVER_HOST"] ?? "localhost";
+var sqlPort = builder.Configuration["SQLSERVER_PORT"] ?? "1433";
+var sqlUser = builder.Configuration["SQLSERVER_USER"] ?? "sa";
+var sqlPassword = builder.Configuration["SA_PASSWORD"];
+var database = builder.Configuration["SQLSERVER_DB"] ?? "FinanceDb";
+var sqlConnectionString = $"Server={sqlHost},{sqlPort};Database={database};User Id={sqlUser};Password={sqlPassword};TrustServerCertificate=true;";
+
+var rabbitMqHost = builder.Configuration["RABBITMQ_HOST"] ?? "localhost";
+var rabbitMqPort = builder.Configuration["RABBITMQ_PORT"] ?? "5672";
+var rabbitMqUser = builder.Configuration["RABBITMQ_USER"] ?? "guest";
+var rabbitMqPassword = builder.Configuration["RABBITMQ_PASSWORD"] ?? "guest";
+var rabbitmqConnectionString = $"amqp://{rabbitMqUser}:{rabbitMqPassword}@{rabbitMqHost}:{rabbitMqPort}/";
+
 builder.Services.AddHealthChecks()
     .AddSqlServer(
-        builder.Configuration.GetConnectionString("FinanceDb")!,
+        sqlConnectionString,
         name: "sqlserver",
         tags: new[] { "db", "sql" })
     .AddRabbitMQ(
-        builder.Configuration.GetConnectionString("RabbitMq")!,
+        rabbitmqConnectionString,
         name: "rabbitmq",
         tags: new[] { "messaging" });
 
@@ -49,15 +62,27 @@ using (var scope = app.Services.CreateScope())
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerExtension(app.Environment);
 }
 
-app.UseSerilogRequestLogging();
+app.UseErrorHandling();
+app.UseLoggingExtension();
 
 app.UseRouting();
 
 app.MapControllers();
 app.MapHealthChecks("/health");
 
-app.Run();
+try
+{
+    Log.Information("Starting FinanceService...");
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "FinanceService terminated unexpectedly");
+}
+finally
+{
+    Log.CloseAndFlush();
+}

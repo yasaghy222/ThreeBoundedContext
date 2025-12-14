@@ -9,6 +9,6 @@ public record UserInfo(
 
 public interface IUserValidationService
 {
-    Task<UserInfo?> GetUserAsync(Guid userId, CancellationToken cancellationToken = default);
-    Task<bool> ValidateUserAsync(Guid userId, CancellationToken cancellationToken = default);
+	Task<UserInfo?> GetUserAsync(Guid userId, CancellationToken cancellationToken = default);
+	Task<bool> ValidateUserAsync(Guid userId, CancellationToken cancellationToken = default);
 }

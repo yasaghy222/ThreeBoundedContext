@@ -1,0 +1,23 @@
+services:
+  seq:
+    image: datalust/seq:latest
+    container_name: seq
+    env_file:
+      - .env
+    ports:
+      - "5341:80"
+      - "5342:5341"
+    volumes:
+      - ./data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - microservices-network
+
+networks:
+  microservices-network:
+    external: true

@@ -9,5 +9,5 @@ public record UserCreatedDomainEvent(
     DateTime CreatedAt
 ) : IDomainEvent
 {
-    public DateTime OccurredAt { get; } = DateTime.UtcNow;
+	public DateTime OccurredAt { get; } = DateTime.UtcNow;
 }

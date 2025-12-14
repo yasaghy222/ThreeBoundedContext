@@ -2,33 +2,33 @@ namespace UserService.Domain.Common;
 
 public abstract class Entity
 {
-    public Guid Id { get; protected set; }
-    
-    private readonly List<IDomainEvent> _domainEvents = new();
-    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
+	public Guid Id { get; protected set; }
 
-    protected Entity()
-    {
-        Id = Guid.NewGuid();
-    }
+	private readonly List<IDomainEvent> _domainEvents = new();
+	public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
-    protected Entity(Guid id)
-    {
-        Id = id;
-    }
+	protected Entity()
+	{
+		Id = Guid.NewGuid();
+	}
 
-    public void AddDomainEvent(IDomainEvent domainEvent)
-    {
-        _domainEvents.Add(domainEvent);
-    }
+	protected Entity(Guid id)
+	{
+		Id = id;
+	}
 
-    public void RemoveDomainEvent(IDomainEvent domainEvent)
-    {
-        _domainEvents.Remove(domainEvent);
-    }
+	public void AddDomainEvent(IDomainEvent domainEvent)
+	{
+		_domainEvents.Add(domainEvent);
+	}
 
-    public void ClearDomainEvents()
-    {
-        _domainEvents.Clear();
-    }
+	public void RemoveDomainEvent(IDomainEvent domainEvent)
+	{
+		_domainEvents.Remove(domainEvent);
+	}
+
+	public void ClearDomainEvents()
+	{
+		_domainEvents.Clear();
+	}
 }
