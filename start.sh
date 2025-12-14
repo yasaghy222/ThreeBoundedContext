@@ -36,6 +36,9 @@ docker-compose logs sqlserver | tail -5
 echo -e "\n${BLUE}Checking RabbitMQ (Port 5672, UI: 15672)...${NC}"
 docker-compose logs rabbitmq | tail -5
 
+echo -e "\n${BLUE}Checking Seq (Port 5341)...${NC}"
+docker-compose logs seq | tail -5
+
 echo -e "\n${BLUE}Service Status:${NC}"
 docker-compose ps
 
@@ -50,6 +53,7 @@ echo -e "\n${BLUE}📊 Infrastructure:${NC}"
 echo -e "  ${YELLOW}SQL Server:${NC}            localhost:1433"
 echo -e "  ${YELLOW}RabbitMQ AMQP:${NC}        localhost:5672"
 echo -e "  ${YELLOW}RabbitMQ Management:${NC}  http://localhost:15672"
+echo -e "  ${YELLOW}Seq Log Dashboard:${NC}    http://localhost:5341"
 
 echo -e "\n${BLUE}📖 Health Check Commands:${NC}"
 echo -e "  ${YELLOW}User Service:${NC}         curl http://localhost:5001/health"

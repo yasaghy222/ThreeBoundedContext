@@ -7,6 +7,7 @@ services:
     env_file:
       - ../../Deploy/RabbitMQ/.env
       - ../../Deploy/SQL/.env
+      - ../../Deploy/Seq/.env
       - ./UserService.API/.env
     ports:
       - "5001:5001"
@@ -22,6 +23,8 @@ services:
       sqlserver:
         condition: service_healthy
       rabbitmq:
+        condition: service_healthy
+      seq:
         condition: service_healthy
     networks:
       - microservices-network

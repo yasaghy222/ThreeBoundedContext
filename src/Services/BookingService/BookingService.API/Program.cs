@@ -1,3 +1,4 @@
+using Logging;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Shared.Swagger;
@@ -13,14 +14,8 @@ builder.Configuration
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true);
 
-// Serilog
-Log.Logger = new LoggerConfiguration()
-    .ReadFrom.Configuration(builder.Configuration)
-    .Enrich.FromLogContext()
-    .WriteTo.Console()
-    .CreateLogger();
-
-builder.Host.UseSerilog();
+// Logging with Serilog + Seq
+builder.AddLoggingExtension("BookingService");
 
 // Add services
 builder.Services.AddApplication();
@@ -68,11 +63,23 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerExtension(app.Environment);
 }
 
-app.UseSerilogRequestLogging();
+app.UseLoggingExtension();
 
 app.UseRouting();
 
 app.MapControllers();
 app.MapHealthChecks("/health");
 
-app.Run();
+try
+{
+    Log.Information("Starting BookingService...");
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "BookingService terminated unexpectedly");
+}
+finally
+{
+    Log.CloseAndFlush();
+}

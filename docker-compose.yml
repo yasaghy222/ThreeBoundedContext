@@ -1,6 +1,7 @@
 include:
   - ./src/Deploy/RabbitMQ/docker-compose.yml
   - ./src/Deploy/SQL/docker-compose.yml
+  - ./src/Deploy/Seq/docker-compose.yml
 
   - ./src/Services/UserService/docker-compose.yml
   - ./src/Services/BookingService/docker-compose.yml

@@ -61,6 +61,7 @@ A clean architecture microservices solution demonstrating Domain-Driven Design (
 - ✅ **Idempotency**: Prevents duplicate invoice creation (FinanceService)
 - ✅ **CQRS**: Command/Query separation with MediatR
 - ✅ **Domain Events**: Clean event-driven architecture
+- ✅ **Centralized Logging**: Serilog with Seq for log aggregation and correlation IDs
 
 ## 🚀 Getting Started
 
@@ -90,6 +91,7 @@ docker-compose down
 | User Service gRPC   | 5002  | http://localhost:5002                |
 | Booking Service API | 5003  | http://localhost:5003/swagger        |
 | Finance Service API | 5005  | http://localhost:5005/swagger        |
+| Seq Log Dashboard   | 5341  | http://localhost:5341                |
 | RabbitMQ Management | 15672 | http://localhost:15672 (guest/guest) |
 | SQL Server          | 1433  | localhost,1433 (sa/your password)    |
 
@@ -100,6 +102,24 @@ Each service exposes a health endpoint:
 - http://localhost:5001/health
 - http://localhost:5003/health
 - http://localhost:5005/health
+
+### Seq - Centralized Log Dashboard
+
+Seq is a centralized log server that collects logs from all microservices. Access the dashboard at:
+
+- **URL**: http://localhost:5341
+- **Features**:
+  - Search and filter logs across all services
+  - Correlation ID tracking for distributed tracing
+  - Real-time log streaming
+  - Structured log data with full context
+
+All services automatically send logs to Seq with:
+
+- Service name identification
+- Correlation IDs for request tracing
+- Machine and thread enrichment
+- Structured logging properties
 
 ## 🔄 Automated Startup Script (start.sh)
 
@@ -135,17 +155,17 @@ The `start.sh` script performs the following steps in sequence:
 3. **Build and Start Services**
 
    - Builds and runs all services using `docker-compose up -d`
-   - Includes: UserService, BookingService, FinanceService, SQL Server, RabbitMQ
+   - Includes: UserService, BookingService, FinanceService, SQL Server, RabbitMQ, Seq
 
 4. **Wait and Health Check**
 
    - Waits 10 seconds for services to become ready
-   - Checks logs for SQL Server and RabbitMQ
+   - Checks logs for SQL Server, RabbitMQ, and Seq
    - Displays the status of all containers
 
 5. **Display Important Information**
    - Shows all service URLs
-   - Shows infrastructure addresses (SQL Server, RabbitMQ)
+   - Shows infrastructure addresses (SQL Server, RabbitMQ, Seq)
    - Provides health check commands
    - Provides commands to view logs
 
