@@ -5,8 +5,8 @@ services:
       context: ../../..
       dockerfile: src/Services/FinanceService/Dockerfile
     env_file:
-      - ../../DockerServices/RabbitMQ/.env
-      - ../../DockerServices/SQL/.env
+      - ../../Deploy/RabbitMQ/.env
+      - ../../Deploy/SQL/.env
       - ./FinanceService.API/.env
     ports:
       - "5005:5005"
