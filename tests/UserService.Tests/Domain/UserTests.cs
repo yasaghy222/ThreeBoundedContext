@@ -1,3 +1,4 @@
+using ErrorHandling.Core.Exceptions;
 using FluentAssertions;
 using UserService.Domain.Entities;
 using UserService.Domain.Events;
@@ -97,13 +98,13 @@ public class UserTests
 	public void Create_EmptyEmail_ShouldThrowException(string? email)
 	{
 		// Act & Assert
-		Assert.Throws<ArgumentException>(() => User.Create(email!, "Test User", "hash"));
+		Assert.Throws<BadRequestException>(() => User.Create(email!, "Test User", "hash"));
 	}
 
 	[Fact]
 	public void Create_InvalidEmailFormat_ShouldThrowException()
 	{
 		// Act & Assert
-		Assert.Throws<ArgumentException>(() => User.Create("invalid-email", "Test User", "hash"));
+		Assert.Throws<BadRequestException>(() => User.Create("invalid-email", "Test User", "hash"));
 	}
 }

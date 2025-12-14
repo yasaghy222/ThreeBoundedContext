@@ -1,3 +1,4 @@
+using ErrorHandling.Core.Exceptions;
 using FluentAssertions;
 using FinanceService.Domain.Entities;
 using FinanceService.Domain.ValueObjects;
@@ -93,7 +94,7 @@ public class InvoiceTests
 		invoice.MarkAsPaid();
 
 		// Act & Assert
-		Assert.Throws<InvalidOperationException>(() => invoice.MarkAsPaid());
+		Assert.Throws<BadRequestException>(() => invoice.MarkAsPaid());
 	}
 
 	[Fact]
@@ -111,7 +112,7 @@ public class InvoiceTests
 		invoice.Cancel();
 
 		// Act & Assert
-		Assert.Throws<InvalidOperationException>(() => invoice.MarkAsPaid());
+		Assert.Throws<BadRequestException>(() => invoice.MarkAsPaid());
 	}
 
 	[Fact]

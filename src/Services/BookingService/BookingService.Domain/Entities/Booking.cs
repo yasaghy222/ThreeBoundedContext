@@ -1,6 +1,7 @@
 using BookingService.Domain.Common;
 using BookingService.Domain.Events;
 using BookingService.Domain.ValueObjects;
+using ErrorHandling.Core.Exceptions;
 
 namespace BookingService.Domain.Entities;
 
@@ -71,7 +72,7 @@ public class Booking : Entity
 	public void Confirm()
 	{
 		if (Status != BookingStatus.Pending)
-			throw new InvalidOperationException("Only pending bookings can be confirmed");
+			throw new BadRequestException("Only pending bookings can be confirmed", "booking_not_pending");
 
 		Status = BookingStatus.Confirmed;
 		UpdatedAt = DateTime.UtcNow;
@@ -80,7 +81,7 @@ public class Booking : Entity
 	public void Cancel()
 	{
 		if (Status == BookingStatus.Completed)
-			throw new InvalidOperationException("Completed bookings cannot be cancelled");
+			throw new BadRequestException("Completed bookings cannot be cancelled", "booking_already_completed");
 
 		Status = BookingStatus.Cancelled;
 		UpdatedAt = DateTime.UtcNow;
@@ -89,7 +90,7 @@ public class Booking : Entity
 	public void Complete()
 	{
 		if (Status != BookingStatus.Confirmed)
-			throw new InvalidOperationException("Only confirmed bookings can be completed");
+			throw new BadRequestException("Only confirmed bookings can be completed", "booking_not_confirmed");
 
 		Status = BookingStatus.Completed;
 		UpdatedAt = DateTime.UtcNow;

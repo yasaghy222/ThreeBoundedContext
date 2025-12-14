@@ -1,3 +1,4 @@
+using ErrorHandling.Core.Exceptions;
 using FluentAssertions;
 using Moq;
 using BookingService.Application.Commands;
@@ -78,7 +79,7 @@ public class CreateBookingCommandHandlerTests
 		    .ReturnsAsync((UserInfo?)null);
 
 		// Act & Assert
-		await Assert.ThrowsAsync<InvalidOperationException>(
+		await Assert.ThrowsAsync<NotFoundException>(
 		    () => _handler.Handle(command, CancellationToken.None));
 
 		_bookingRepositoryMock.Verify(
@@ -104,7 +105,7 @@ public class CreateBookingCommandHandlerTests
 		    .ReturnsAsync(inactiveUser);
 
 		// Act & Assert
-		var exception = await Assert.ThrowsAsync<InvalidOperationException>(
+		var exception = await Assert.ThrowsAsync<BadRequestException>(
 		    () => _handler.Handle(command, CancellationToken.None));
 
 		exception.Message.Should().Contain("not active");

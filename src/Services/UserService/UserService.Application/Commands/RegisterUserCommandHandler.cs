@@ -1,3 +1,4 @@
+using ErrorHandling.Core.Exceptions;
 using MediatR;
 using UserService.Application.DTOs;
 using UserService.Domain.Common;
@@ -25,7 +26,7 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, R
 		var exists = await _userRepository.ExistsAsync(request.Email, cancellationToken);
 		if (exists)
 		{
-			throw new InvalidOperationException($"User with email {request.Email} already exists");
+			throw new ConflictException($"User with email {request.Email} already exists", "user_already_exists");
 		}
 
 		// Hash password (simplified - in production use proper hashing)

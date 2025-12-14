@@ -1,3 +1,4 @@
+using ErrorHandling.Core.Exceptions;
 using MediatR;
 using BookingService.Application.DTOs;
 using BookingService.Domain.Entities;
@@ -26,12 +27,12 @@ public class CreateBookingCommandHandler : IRequestHandler<CreateBookingCommand,
 
 		if (user == null)
 		{
-			throw new InvalidOperationException($"User with ID {request.UserId} not found");
+			throw new NotFoundException($"User with ID {request.UserId} not found", "user_not_found");
 		}
 
 		if (!user.IsActive)
 		{
-			throw new InvalidOperationException($"User with ID {request.UserId} is not active");
+			throw new BadRequestException($"User with ID {request.UserId} is not active", "user_not_active");
 		}
 
 		// Create booking entity

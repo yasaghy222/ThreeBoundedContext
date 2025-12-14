@@ -1,3 +1,4 @@
+using ErrorHandling.Core.Exceptions;
 using FluentAssertions;
 using Moq;
 using UserService.Application.Commands;
@@ -76,7 +77,7 @@ public class RegisterUserCommandHandlerTests
 		    .ReturnsAsync(true);
 
 		// Act & Assert
-		await Assert.ThrowsAsync<InvalidOperationException>(
+		await Assert.ThrowsAsync<ConflictException>(
 		    () => _handler.Handle(command, CancellationToken.None));
 
 		_userRepositoryMock.Verify(

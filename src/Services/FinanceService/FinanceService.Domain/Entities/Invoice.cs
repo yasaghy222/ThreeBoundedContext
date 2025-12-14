@@ -1,3 +1,4 @@
+using ErrorHandling.Core.Exceptions;
 using FinanceService.Domain.Common;
 using FinanceService.Domain.ValueObjects;
 
@@ -66,10 +67,10 @@ public class Invoice : Entity
 	public void MarkAsPaid()
 	{
 		if (Status == InvoiceStatus.Paid)
-			throw new InvalidOperationException("Invoice is already paid");
+			throw new BadRequestException("Invoice is already paid", "invoice_already_paid");
 
 		if (Status == InvoiceStatus.Cancelled)
-			throw new InvalidOperationException("Cannot pay a cancelled invoice");
+			throw new BadRequestException("Cannot pay a cancelled invoice", "invoice_cancelled");
 
 		Status = InvoiceStatus.Paid;
 		PaidAt = DateTime.UtcNow;
@@ -78,7 +79,7 @@ public class Invoice : Entity
 	public void Cancel()
 	{
 		if (Status == InvoiceStatus.Paid)
-			throw new InvalidOperationException("Cannot cancel a paid invoice");
+			throw new BadRequestException("Cannot cancel a paid invoice", "invoice_already_paid");
 
 		Status = InvoiceStatus.Cancelled;
 	}

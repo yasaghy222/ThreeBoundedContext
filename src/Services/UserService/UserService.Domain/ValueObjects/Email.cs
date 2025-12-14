@@ -1,3 +1,5 @@
+using ErrorHandling.Core.Exceptions;
+
 namespace UserService.Domain.ValueObjects;
 
 public record Email
@@ -12,10 +14,10 @@ public record Email
 	public static Email Create(string email)
 	{
 		if (string.IsNullOrWhiteSpace(email))
-			throw new ArgumentException("Email cannot be empty", nameof(email));
+			throw new BadRequestException("Email cannot be empty", "email_empty");
 
 		if (!email.Contains('@'))
-			throw new ArgumentException("Invalid email format", nameof(email));
+			throw new BadRequestException("Invalid email format", "email_invalid_format");
 
 		return new Email(email.ToLowerInvariant());
 	}
