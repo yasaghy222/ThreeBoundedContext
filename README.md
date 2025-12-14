@@ -44,16 +44,19 @@ A clean architecture microservices solution demonstrating Domain-Driven Design (
 ## 🌟 Key Features
 
 ### Clean Architecture (per service)
+
 - **Domain Layer**: Entities, Value Objects, Domain Events, Repository Interfaces
 - **Application Layer**: CQRS (Commands/Queries), Handlers, DTOs, Validators
 - **Infrastructure Layer**: EF Core, RabbitMQ, gRPC, Outbox Pattern
 - **Presentation Layer**: REST APIs, Health Checks, Swagger
 
 ### Communication Patterns
+
 - **Synchronous (gRPC)**: Booking → User (validate user exists & is active)
 - **Asynchronous (RabbitMQ)**: Booking → Finance (create invoice after booking)
 
 ### Advanced Patterns
+
 - ✅ **Outbox Pattern**: Ensures reliable message delivery (BookingService)
 - ✅ **Idempotency**: Prevents duplicate invoice creation (FinanceService)
 - ✅ **CQRS**: Command/Query separation with MediatR
@@ -62,6 +65,7 @@ A clean architecture microservices solution demonstrating Domain-Driven Design (
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Docker & Docker Compose
 - .NET 9 SDK (for local development)
 
@@ -80,17 +84,19 @@ docker-compose down
 
 ### Services URLs
 
-| Service | Port | URL |
-|---------|------|-----|
-| User Service API | 5001 | http://localhost:5001/swagger |
-| User Service gRPC | 5002 | http://localhost:5002 |
-| Booking Service API | 5003 | http://localhost:5003/swagger |
-| Finance Service API | 5005 | http://localhost:5005/swagger |
+| Service             | Port  | URL                                  |
+| ------------------- | ----- | ------------------------------------ |
+| User Service API    | 5001  | http://localhost:5001/swagger        |
+| User Service gRPC   | 5002  | http://localhost:5002                |
+| Booking Service API | 5003  | http://localhost:5003/swagger        |
+| Finance Service API | 5005  | http://localhost:5005/swagger        |
 | RabbitMQ Management | 15672 | http://localhost:15672 (guest/guest) |
-| SQL Server | 1433 | localhost,1433 (sa/YourStrong@Passw0rd) |
+| SQL Server          | 1433  | localhost,1433 (sa/your password)    |
 
 ### Health Checks
+
 Each service exposes a health endpoint:
+
 - http://localhost:5001/health
 - http://localhost:5003/health
 - http://localhost:5005/health
@@ -103,18 +109,19 @@ Each service exposes a health endpoint:
 curl -X POST http://localhost:5001/api/users \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "john@example.com",
-    "fullName": "John Doe",
-    "password": "secret123"
+    "email": "t.yasaghi@gmail.com",
+    "fullName": "Taha Yasaghi",
+    "password": "Taha@123"
   }'
 ```
 
 Response:
+
 ```json
 {
   "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "email": "john@example.com",
-  "fullName": "John Doe"
+  "email": "t.yasaghi@gmail.com",
+  "fullName": "Taha Yasaghi"
 }
 ```
 
@@ -126,12 +133,13 @@ curl -X POST http://localhost:5003/api/bookings \
   -d '{
     "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     "description": "Hotel Reservation",
-    "amount": 250.00,
-    "bookingDate": "2024-12-25T14:00:00Z"
+    "amount": 2.500.00,
+    "bookingDate": "2025-11-14T14:00:00Z"
   }'
 ```
 
 This will:
+
 1. ✅ Validate user via gRPC (sync)
 2. ✅ Create booking in database
 3. ✅ Save event to Outbox table (same transaction)
@@ -180,21 +188,25 @@ ThreeBoundedContext/
 ## 💡 Trade-offs & Design Decisions
 
 ### Why gRPC for User Validation?
+
 - **Sync required**: Booking needs immediate user validation
 - **Performance**: gRPC is faster than REST for internal communication
 - **Type safety**: Proto files ensure contract consistency
 
 ### Why RabbitMQ for Invoice Creation?
+
 - **Async is acceptable**: Invoice can be created slightly later
 - **Reliability**: Message queue ensures no lost events
 - **Decoupling**: Finance service can be down temporarily
 
 ### Why Outbox Pattern?
+
 - **Atomicity**: Event is saved in same transaction as booking
 - **No lost events**: Even if RabbitMQ is down, events are persisted
 - **Eventual consistency**: Background worker retries failed messages
 
 ### Why Idempotency in Finance?
+
 - **Duplicate prevention**: RabbitMQ may deliver same message twice
 - **At-least-once delivery**: Trade reliability for potential duplicates
 - **Simple check**: `ExistsByBookingId` before creating invoice
@@ -227,20 +239,19 @@ dotnet test tests/UserService.Tests
 ## 📊 Observability
 
 ### Structured Logging (Serilog)
+
 Each service uses Serilog with console output:
+
 ```
 [INF] User registered successfully: {UserId}
 [INF] Created invoice {InvoiceId} for booking {BookingId}
 ```
 
 ### Health Checks
+
 - SQL Server connectivity
 - RabbitMQ connectivity
 
 ## 📜 License
 
 MIT License
-
----
-
-Built with ❤️ for microservices architecture interviews
