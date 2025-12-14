@@ -72,3 +72,7 @@ Desktop.ini
 appsettings.*.json
 !appsettings.json
 !appsettings.Development.json
+
+DockerServices/SQL/data/*.mdf
+DockerServices/SQL/data/*.ldf
+DockerServices/SQL/data/*.bak

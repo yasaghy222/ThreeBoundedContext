@@ -101,7 +101,85 @@ Each service exposes a health endpoint:
 - http://localhost:5003/health
 - http://localhost:5005/health
 
-## 📝 API Usage
+## 🔄 Automated Startup Script (start.sh)
+
+### How to Run
+
+The `start.sh` script is an automated tool to launch all microservices:
+
+```bash
+# Navigate to your project directory
+cd /path/to/ThreeBoundedContext
+
+# Make the script executable (first time only)
+chmod +x start.sh
+
+# Run the script
+./start.sh
+```
+
+### What the Script Does
+
+The `start.sh` script performs the following steps in sequence:
+
+1. **Cleanup**
+
+   - Removes old containers and all associated volumes
+   - Removes existing network if present
+
+2. **Create Network**
+
+   - Creates a Docker network named `microservices-network`
+   - This network is used for communication between services
+
+3. **Build and Start Services**
+
+   - Builds and runs all services using `docker-compose up -d`
+   - Includes: UserService, BookingService, FinanceService, SQL Server, RabbitMQ
+
+4. **Wait and Health Check**
+
+   - Waits 10 seconds for services to become ready
+   - Checks logs for SQL Server and RabbitMQ
+   - Displays the status of all containers
+
+5. **Display Important Information**
+   - Shows all service URLs
+   - Shows infrastructure addresses (SQL Server, RabbitMQ)
+   - Provides health check commands
+   - Provides commands to view logs
+
+### Output Colors
+
+The script uses different colors for better clarity:
+
+- 🔵 **Blue**: General information
+- 🟡 **Yellow**: Steps being executed
+- 🟢 **Green**: Success messages
+- 🔴 **Red**: Errors (if any)
+
+### Useful Commands After Running the Script
+
+```bash
+# View logs for all services
+docker-compose logs -f
+
+# View logs for a specific service
+docker-compose logs -f user-service
+docker-compose logs -f booking-service
+docker-compose logs -f finance-service
+
+# Check service status
+docker-compose ps
+
+# Stop services
+docker-compose down
+
+# Stop services and remove all data
+docker-compose down -v
+```
+
+## �📝 API Usage
 
 ### 1. Register a User (UserService)
 

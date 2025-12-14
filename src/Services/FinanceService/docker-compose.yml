@@ -1,0 +1,30 @@
+services:
+  finance-service:
+    container_name: finance-service
+    build:
+      context: ../../..
+      dockerfile: src/Services/FinanceService/Dockerfile
+    env_file:
+      - ../../DockerServices/RabbitMQ/.env
+      - ../../DockerServices/SQL/.env
+      - ./FinanceService.API/.env
+    ports:
+      - "5005:5005"
+    volumes:
+      - type: bind
+        source: ./FinanceService.API/appsettings.json
+        target: /app/appsettings.json
+      - type: bind
+        source: ./FinanceService.API/.env
+        target: /app/.env  
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - microservices-network
+
+networks:
+  microservices-network:
+    external: true

@@ -8,18 +8,10 @@ using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using Shared.Contracts.Events;
+using Shared.Infrastructure.Messaging;
 using FinanceService.Application.Commands;
 
 namespace FinanceService.Infrastructure.Messaging;
-
-public class RabbitMqSettings
-{
-	public string HostName { get; set; } = "localhost";
-	public int Port { get; set; } = 5672;
-	public string UserName { get; set; } = "guest";
-	public string Password { get; set; } = "guest";
-	public string VirtualHost { get; set; } = "/";
-}
 
 public class BookingCreatedConsumer : BackgroundService
 {

@@ -1,0 +1,32 @@
+services:
+  booking-service:
+    container_name: booking-service
+    build:
+      context: ../../..
+      dockerfile: src/Services/BookingService/Dockerfile
+    env_file:
+      - ../../DockerServices/RabbitMQ/.env
+      - ../../DockerServices/SQL/.env
+      - ./BookingService.API/.env
+    ports:
+      - "5003:5003"
+    volumes:
+      - type: bind
+        source: ./BookingService.API/appsettings.json
+        target: /app/appsettings.json
+      - type: bind
+        source: ./BookingService.API/.env
+        target: /app/.env  
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      user-service:
+        condition: service_started
+    networks:
+      - microservices-network
+
+networks:
+  microservices-network:
+    external: true
