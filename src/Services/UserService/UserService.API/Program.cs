@@ -1,6 +1,7 @@
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using Shared.Swagger;
 using UserService.Application;
 using UserService.Infrastructure;
 using UserService.Infrastructure.Grpc;
@@ -26,11 +27,7 @@ builder.Services.AddGrpc();
 
 // Controllers
 builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new() { Title = "User Service API", Version = "v1" });
-});
+builder.Services.AddSwaggerExtension(builder.Configuration, builder.Environment);
 
 // Health Checks
 builder.Services.AddHealthChecks()
@@ -54,8 +51,7 @@ using (var scope = app.Services.CreateScope())
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerExtension(app.Environment);
 }
 
 app.UseSerilogRequestLogging();

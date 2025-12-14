@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using Shared.Swagger;
 using BookingService.Application;
 using BookingService.Infrastructure;
 using BookingService.Infrastructure.Persistence;
@@ -21,11 +22,7 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 // Controllers
 builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new() { Title = "Booking Service API", Version = "v1" });
-});
+builder.Services.AddSwaggerExtension(builder.Configuration, builder.Environment);
 
 // Health Checks
 builder.Services.AddHealthChecks()
@@ -49,8 +46,7 @@ using (var scope = app.Services.CreateScope())
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerExtension(app.Environment);
 }
 
 app.UseSerilogRequestLogging();
