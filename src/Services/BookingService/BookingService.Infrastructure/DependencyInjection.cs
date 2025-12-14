@@ -12,28 +12,28 @@ namespace BookingService.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
-    {
-        // Database
-        services.AddDbContext<BookingDbContext>(options =>
-            options.UseSqlServer(
-                configuration.GetConnectionString("BookingDb"),
-                b => b.MigrationsAssembly(typeof(BookingDbContext).Assembly.FullName)));
+	public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+	{
+		// Database
+		services.AddDbContext<BookingDbContext>(options =>
+		    options.UseSqlServer(
+		        configuration.GetConnectionString("BookingDb"),
+		        b => b.MigrationsAssembly(typeof(BookingDbContext).Assembly.FullName)));
 
-        // Repositories
-        services.AddScoped<IBookingRepository, BookingRepository>();
+		// Repositories
+		services.AddScoped<IBookingRepository, BookingRepository>();
 
-        // RabbitMQ
-        services.Configure<RabbitMqSettings>(configuration.GetSection("RabbitMq"));
-        services.AddSingleton<IMessagePublisher, RabbitMqPublisher>();
+		// RabbitMQ
+		services.Configure<RabbitMqSettings>(configuration.GetSection("RabbitMq"));
+		services.AddSingleton<IMessagePublisher, RabbitMqPublisher>();
 
-        // gRPC Client
-        services.Configure<GrpcSettings>(configuration.GetSection("Grpc"));
-        services.AddSingleton<IUserValidationService, UserGrpcClient>();
+		// gRPC Client
+		services.Configure<GrpcSettings>(configuration.GetSection("Grpc"));
+		services.AddSingleton<IUserValidationService, UserGrpcClient>();
 
-        // Outbox Processor (Background Service)
-        services.AddHostedService<OutboxProcessor>();
+		// Outbox Processor (Background Service)
+		services.AddHostedService<OutboxProcessor>();
 
-        return services;
-    }
+		return services;
+	}
 }

@@ -2,5 +2,5 @@ namespace BookingService.Domain.Common;
 
 public interface IDomainEvent
 {
-    DateTime OccurredAt { get; }
+	DateTime OccurredAt { get; }
 }
